@@ -1,0 +1,38 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  rol      String  @default("usuario")
+  contenidos Contenido[]
+}
+
+model Genero {
+  id         Int         @id @default(autoincrement())
+  nombre     String
+  contenidos Contenido[]
+}
+
+model Contenido {
+  id       Int    @id @default(autoincrement())
+  nombre   String
+  generoId Int
+  genero   Genero @relation(fields: [generoId], references: [id])
+  usuarioId Int
+  usuario     Usuario @relation(fields: [usuarioId], references: [id])
+}
+
+model TokenRevocado {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique @db.VarChar(500)
+  createdAt DateTime @default(now())
+}
