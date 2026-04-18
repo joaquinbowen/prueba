@@ -100,4 +100,4 @@ module.exports = {
     countFavoritos,
     searchContenidos,
     updateFavorito
-}
+}

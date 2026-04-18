@@ -37,10 +37,15 @@ async function loginUsuario(data) {
     return token;
 }
 
+async function cambiarPremium(id) {
+    return await userRepository.cambiarPremium(id);
+}
+
 
 
 
 module.exports = {
     loginUsuario,
-    registrarUsuario
+    registrarUsuario,
+    cambiarPremium
 }
