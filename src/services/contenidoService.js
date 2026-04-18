@@ -1,19 +1,19 @@
 const contenidoRepository = require("../repositories/contenidoRepository");
 
-async function getContenidos() {
-    return await contenidoRepository.getContenidos();
+async function getContenidos(usuarioId) {
+    return await contenidoRepository.getContenidos(usuarioId);
 }
 
-async function createContenido(data) {
-    return await contenidoRepository.createContenido(data);
+async function createContenido(data,usuarioId) {
+    return await contenidoRepository.createContenido(data,usuarioId);
 }
 
-async function updateContenido(id,data) {
-    return await contenidoRepository.updateContenido(id,data);
+async function updateContenido(id,data,usuarioId) {
+    return await contenidoRepository.updateContenido(id,data,usuarioId);
 }
 
-async function deleteContenido(id) {
-    return await contenidoRepository.deleteContenido(id);
+async function deleteContenido(id,usuarioId) {
+    return await contenidoRepository.deleteContenido(id,usuarioId);
 }
 
 

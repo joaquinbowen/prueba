@@ -9,10 +9,10 @@ datasource db {
 }
 
 model Usuario {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  rol      String  @default("usuario")
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  password   String
+  rol        String      @default("cliente")
   contenidos Contenido[]
 }
 
@@ -23,12 +23,13 @@ model Genero {
 }
 
 model Contenido {
-  id       Int    @id @default(autoincrement())
-  nombre   String
-  generoId Int
-  genero   Genero @relation(fields: [generoId], references: [id])
+  id        Int     @id @default(autoincrement())
+  nombre    String
+  generoId  Int
+  genero    Genero  @relation(fields: [generoId], references: [id])
   usuarioId Int
-  usuario     Usuario @relation(fields: [usuarioId], references: [id])
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  favorito  Boolean @default(false)
 }
 
 model TokenRevocado {
