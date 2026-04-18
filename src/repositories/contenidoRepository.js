@@ -22,7 +22,7 @@ async function updateContenido(id, data, usuarioId) {
     try {
         return await prisma.contenido.update({
             where: { id: contenidoId },
-            data: { nombre: data.nombre, generoId: data.generoId }
+            data: { nombre: data.nombre, generoId: data.generoId, favorito:data.favorito}
         })
     } catch (error) {
         if (error.code === 'P2025') {
