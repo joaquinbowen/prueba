@@ -317,7 +317,8 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Error al obtener las tareas
+                    example: Error al obtener los contenidos
+
 
     post:
       summary: Crear un nuevo contenido
@@ -333,14 +334,19 @@ paths:
             schema:
               type: object
               required:
-                - titulo
+                - nombre
+                - generoId
               properties:
                 nombre:
                   type: string
-                  example: Drama
+                  example: Titanic
+                generoId:
+                  type: integer
+                  example: 2
+
       responses:
         '200':
-          description: Genero creado correctamente
+          description: Contenido creado correctamente
           content:
             application/json:
               schema:
@@ -348,7 +354,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Genero creado correctamente
+                    example: Contenido creado correctamente
                   data:
                     type: object
                     properties:
@@ -357,7 +363,11 @@ paths:
                         example: 1
                       nombre:
                         type: string
-                        example: Drama
+                        example: Titanic
+                      generoId:
+                        type: integer
+                        example: 2
+
         '401':
           description: No autorizado
           content:
@@ -377,15 +387,22 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Error al crear el libro
-  /api/contenidos{id}:
+                    example: Error al crear el contenido
+
+  /api/contenidos/{id}:
     put:
-      summary: Editar un nuevo contenido
-      description: Editar nuevo  contenido
+      summary: Editar un contenido existente
+      description: Actualiza los datos de un contenido
       tags:
         - contenidos
       security:
         - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -393,13 +410,16 @@ paths:
             schema:
               type: object
               required:
-                - titulo
+                - nombre
+                - generoId
               properties:
                 nombre:
                   type: string
-                  example: Drama
+                  example: Inception (Updated)
                 generoId:
                   type: integer
+                  example: 1
+
       responses:
         '200':
           description: contenido editado correctamente
@@ -509,6 +529,114 @@ paths:
                       type: string
                       example: Error al contenido la tarea
     
+  /api/favorites:
+    get:
+      summary: Obtener favoritos
+      description: Retorna la lista de contenidos marcados como favoritos por el usuario actual
+      tags:
+        - Favoritos
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Favoritos obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/contenido'
+        '401':
+          description: No autorizado
+    post:
+      summary: Agregar a favoritos
+      description: Agrega un contenido existente a la lista de favoritos. Sujeto a límite de 5 para no-Premium.
+      tags:
+        - Favoritos
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  example: 5
+      responses:
+        '200':
+          description: Agregado a favoritos correctamente
+        '400':
+          description: Límite de favoritos alcanzado o error en la solicitud
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Límite de 5 favoritos alcanzado para usuarios no Premium
+
+  /api/favorites/{id}:
+    delete:
+      summary: Eliminar de favoritos
+      description: Quita un contenido de la lista de favoritos
+      tags:
+        - Favoritos
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Eliminado de favoritos correctamente
+
+  /api/users/premium:
+    patch:
+      summary: Convertir a Premium
+      description: Actualiza el estatus del usuario actual a "premium"
+      tags:
+        - Usuarios
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Usuario actualizado a Premium correctamente
+
+  /api/catalog/search:
+    get:
+      summary: Buscar en el catálogo
+      description: Busca contenidos por título en la colección del usuario
+      tags:
+        - Catálogo
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Término de búsqueda
+          schema:
+            type: string
+            example: Cars
+      responses:
+        '200':
+          description: Resultados de búsqueda
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/contenido'
+
 components:
   securitySchemes:
     BearerAuth:
@@ -531,7 +659,8 @@ components:
           format: password
         rol:
           type: string
-          enum: [usuario, admin]
+          enum: [cliente, premium]
+
 
     genero:
       type: object
@@ -557,4 +686,10 @@ tags:
   - name: generos
     description: Endpoints para gestionar generos
   - name: contenidos
-    description: Endpoints para gestionar generos
+    description: Endpoints para gestionar contenidos
+  - name: Favoritos
+    description: Endpoints para la lista personal de favoritos
+  - name: Usuarios
+    description: Gestión de estatus de usuario (Premium)
+  - name: Catálogo
+    description: Búsqueda y exploración

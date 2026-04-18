@@ -16,9 +16,17 @@ async function createContenido(req, res) {
     try {
 
         const usuarioId = req.user.userId;
+        const { nombre, generoId } = req.body;
+
+        if (!nombre || !generoId) {
+            return res.status(400).json({ message: "Nombre y generoId son requeridos" });
+        }
+
         const contenido = await contenidoService.createContenido(req.body, usuarioId);
 
-        res.status(200).json({ message: "Libro creado correctamente", data: contenido });
+
+        res.status(200).json({ message: "Contenido creado correctamente", data: contenido });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -4,6 +4,10 @@ require('dotenv').config();
 const generoRoutes = require("./routes/generoRoutes");
 const contenidoRoutes = require("./routes/contenidoRoutes");
 const authRoutes = require("./routes/authRoutes");
+const favoritesRoutes = require("./routes/favoritesRoutes");
+const userRoutes = require("./routes/userRoutes");
+const catalogRoutes = require("./routes/catalogRoutes");
+
 
 const express = require('express');
 const { apiReference } = require('@scalar/express-api-reference');
@@ -15,12 +19,12 @@ const port = process.env.PORT || 3000;
 const jwtSecret = process.env.JWT_SECRET;
 
 const cors = require("cors");
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 
-const corsOptions = {
-    origin: 'http://localhost:3000' || process.env.CORS_ORIGIN,
-    credentials:true
 
-}
 
 app.use(express.json());
 
@@ -69,6 +73,10 @@ app.use(
 app.use("/api", generoRoutes);
 app.use("/api", contenidoRoutes);
 app.use("/api", authRoutes);
+app.use("/api", favoritesRoutes);
+app.use("/api", userRoutes);
+app.use("/api", catalogRoutes);
+
 
 
 
