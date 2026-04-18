@@ -22,7 +22,7 @@ async function updateContenido(id, data, usuarioId) {
     try {
         return await prisma.contenido.update({
             where: { id: contenidoId },
-            data: { nombre: data.nombre, generoId: data.generoId, favorito:data.favorito}
+            data: { nombre: data.nombre, generoId: data.generoId }
         })
     } catch (error) {
         if (error.code === 'P2025') {
@@ -48,9 +48,56 @@ async function deleteContenido(id, usuarioId) {
     }
 }
 
+async function getFavoritos(usuarioId) {
+    return await prisma.contenido.findMany({
+        where: {
+            usuarioId: usuarioId,
+            favorito: true
+        },
+        include: {
+            genero: true
+        }
+    });
+}
+
+async function countFavoritos(usuarioId) {
+    return await prisma.contenido.count({
+        where: {
+            usuarioId: usuarioId,
+            favorito: true
+        }
+    });
+}
+
+async function searchContenidos(usuarioId, query) {
+    return await prisma.contenido.findMany({
+        where: {
+            usuarioId: usuarioId,
+            nombre: {
+                contains: query
+            }
+        },
+        include: {
+            genero: true
+        }
+    });
+}
+
+async function updateFavorito(id, usuarioId, favorito) {
+    const contenidoId = parseInt(id);
+    return await prisma.contenido.update({
+        where: { id: contenidoId },
+        data: { favorito }
+    });
+}
+
 module.exports = {
     getContenidos,
     createContenido,
     deleteContenido,
-    updateContenido
+    updateContenido,
+    getFavoritos,
+    countFavoritos,
+    searchContenidos,
+    updateFavorito
 }
