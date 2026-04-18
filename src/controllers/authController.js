@@ -40,6 +40,16 @@ async function logout(req, res) {
     
 }
 
+async function cambiarPremium(req,res) {
+    const contenidoId = req.params.id;
+    try {
+        const premium = await authServices.cambiarPremium(contenidoId);
+        return res.status(200).json({message:"usuario cmbiado a premiun"})
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     loginUsuario,
     registrarUsuario,
