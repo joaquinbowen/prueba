@@ -53,6 +53,7 @@ async function cambiarPremium(req,res) {
 module.exports = {
     loginUsuario,
     registrarUsuario,
-    logout
+    logout,
+    cambiarPremium
 
 }
